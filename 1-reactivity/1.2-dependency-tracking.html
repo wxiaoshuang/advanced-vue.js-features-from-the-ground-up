@@ -1,0 +1,34 @@
+<script>
+    // 全局依赖
+    window.Dep = class Dep {
+        constructor() {
+            this.subscribers = new Set();
+        }
+        depend() {
+            if(activeUpdate) { // activeUpdate注册为订阅者
+                this.subscribers.add(activeUpdate)
+            }
+
+        }
+        // 运行所有的订阅者方法
+        notify() {
+           this.subscribers.forEach(sub => {
+               sub();
+           })
+        }
+    }
+    let activeUpdate
+    // js单线程语言，任一时刻只能有一个函数执行， activeUpdate可以判断update是否在执行
+    function autorun(update) {
+        function wrapperUpdate() {
+            activeUpdate = wrapperUpdate
+            update() // wrapperUpdate, 闭包
+            activeUpdate = null;
+        }
+        wrapperUpdate();
+    }
+    autorun(() => {
+        // activeUpdate
+        dep.depend()
+    })
+</script>
