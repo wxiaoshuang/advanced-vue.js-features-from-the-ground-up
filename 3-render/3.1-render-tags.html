@@ -1,0 +1,30 @@
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js"></script>
+<div id="app">
+    <example :tags="['h1','h2', 'h3']"></example>
+    <function-component :tags="['h1','h2','h3']"></function-component>
+</div>
+<script>
+    Vue.component('example', {
+        props: ['tags'],
+        render(h) {
+            return h('div', {attrs: {
+                id:'hello'
+            }},
+            this.tags.map((tag, i) => h(tag, i))
+            )
+        }
+    })
+    // 函数组件，其实是一个函数，没有自己的状态，不创建组件实例， 因为不可以在render里面调用this, render函数的第二个参数是上下文,可以结构选项
+    const FunctionComponent = {
+        functional: true,
+        render (h, {props:{tags}}){
+            return h('div', {attrs: {
+                id:'function'
+            }},
+            tags.map((tag, i) => h(tag, i))
+            )
+        }
+    }
+    Vue.component('function-component', FunctionComponent)
+    new Vue({el: '#app'})
+</script>
